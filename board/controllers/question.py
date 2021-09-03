@@ -1,15 +1,10 @@
-from board.models.answer import Answer
-from flask import Blueprint,render_template,request,make_response,redirect
-
+from flask import render_template,request,make_response,redirect,url_for
 from datetime import datetime
 
-from flask.helpers import url_for
 from board.models.question import Question
 from board import db
+from board.controllers import q_bp
 
-from board.forms import QuestionForm, AnswerForm
-
-q_bp = Blueprint('question',__name__,url_prefix='/question')
 
 @q_bp.route('/list')
 def list():
@@ -19,28 +14,28 @@ def list():
     return render_template('question/question_list.html',
                             question_list=question_list)
 
-@q_bp.route('/detail/<int:question_id>')
+@q_bp.route('/detail/<int:question_id>',methods=['GET'])
 def detail(question_id):
-    form = AnswerForm()
     question = Question.query.get(question_id)
     return render_template('question/question_detail.html',
-                            question=question,form=form)
+                            question=question)
                     
 
 @q_bp.route('/create', methods=['GET','POST'])
 def create():
-    form = QuestionForm()
-    if request.method == 'POST' and form.validate_on_submit():
+    if request.method == 'POST':
+        subject = request.form.get('subject')
+        content = request.form.get('content')
         question = Question(
-            subject = form.subject.data,
-            content = form.content.data,
+            subject = subject,
+            content = content,
             create_date = datetime.now()
         )
         db.session.add(question)
         db.session.commit()
         return redirect(url_for('main.index'))
 
-    return render_template('question/question_form.html',form=form)
+    return render_template('question/question_form.html')
 
 
 @q_bp.route('/del/<int:question_id>')
@@ -49,4 +44,4 @@ def delete(question_id):
     db.session.delete(q)
     db.session.commit()
 
-    return make_response("seccess",200)
+    return redirect(url_for('question.list'))

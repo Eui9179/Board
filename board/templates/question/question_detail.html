@@ -12,6 +12,10 @@
             </div>
         </div>
     </div>
+    <form action="{{ url_for('question.delete', question_id=question.id) }}" method="get" class="my-3">
+        <input type="submit" value="질문 삭제" class="btn btn-primary">
+    </form>
+
     <h5 class="border-bottom my-3 py-2">{{ question.answer_set|length }}개의 답변이 있습니다.</h5>
     {% for answer in question.answer_set %}
     <div class="card my-3">
@@ -26,14 +30,6 @@
     </div>
     {% endfor %}
     <form action="{{ url_for('answer.create', question_id=question.id) }}" method="post" class="my-3">
-        {{ form.csrf_token }}
-        <!-- 오류표시 Start -->
-        {% for field, errors in form.errors.items() %}
-        <div class="alert alert-danger" role="alert">
-            <strong>{{ form[field].label }}</strong>: {{ ', '.join(errors) }}
-        </div>
-        {% endfor %}
-        <!-- 오류표시 End -->
         <div class="form-group">
             <textarea name="content" id="content" class="form-control" rows="10"></textarea>
         </div>
