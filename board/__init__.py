@@ -16,8 +16,9 @@ db.init_app(app)
 migrate.init_app(app,db)
 from board.models import answer, question
 
-from board.controllers import board
-from board.controllers import question
-app.register_blueprint(board.bp)
+from board.controllers import main,question,answer
+
+app.register_blueprint(main.bp)
 app.register_blueprint(question.q_bp)
+app.register_blueprint(answer.a_bp)
 
