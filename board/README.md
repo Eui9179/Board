@@ -1,4 +1,3 @@
-# flaskStudy
 
 # 시작
 flask run
