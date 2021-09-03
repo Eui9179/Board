@@ -6,3 +6,6 @@ config.py
 default.cfg
 
 migrations
+.idea
+board.db
+*.pyc
